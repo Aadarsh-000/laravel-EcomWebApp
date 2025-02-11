@@ -28,7 +28,7 @@ class StripeController extends Controller
             'source' => $request->stripeToken,
             'description' => 'Payments done from',
         ]);
-
+        // Return Values of DD:
         dd($charge);
     }
 }
