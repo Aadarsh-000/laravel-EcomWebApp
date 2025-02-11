@@ -136,6 +136,7 @@
                         <input type="hidden" class="form-control mt-1" name="bill" value="{{$total}}">
 
                         <input type="submit" value="Proceed to checkout" class="primary-btn btn-block mt-1">
+                        
                     </form>
 
                     

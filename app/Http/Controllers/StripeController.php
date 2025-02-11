@@ -26,7 +26,7 @@ class StripeController extends Controller
             'amount' => $request->bill * 100,
             'currency' => 'usd',
             'source' => $request->stripeToken,
-            'description' => 'Payments done from',
+            'description' => 'Payments done from'. $request->fullname,
         ]);
 
         dd($charge);
