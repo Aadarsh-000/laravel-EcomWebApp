@@ -35,6 +35,7 @@ class MainController extends Controller
     }
 
     public function checkoutItem(Request $data){
+
         if(session()->has('id')){
             $order = new Order();
             $order->status = "Pending";
@@ -45,6 +46,7 @@ class MainController extends Controller
             $order->fullname = $data->input('fullname');
 
             if($order->save()){
+                
                 $carts = Cart::where('customerId', session()->get('id'))->get();
 
                 foreach($carts as $item){
