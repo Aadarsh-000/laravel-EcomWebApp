@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\Testing;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -9,6 +10,7 @@ use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class MainController extends Controller
 {
@@ -46,7 +48,7 @@ class MainController extends Controller
             $order->fullname = $data->input('fullname');
 
             if($order->save()){
-                
+
                 $carts = Cart::where('customerId', session()->get('id'))->get();
 
                 foreach($carts as $item){
@@ -181,4 +183,53 @@ class MainController extends Controller
             return redirect()->route('login')->with('error', 'Please login to update cart');
         }
     }
+
+    public function profile(){
+        if(session()->has('id')){
+           $user = User::find(session()->get('id'));
+        return  view('profile',compact('user'));
+    }}
+
+    public function updateUser(Request $data){
+        
+        $user = User::find(session()->get('id'));
+        $user->fullname = $data->input('fullname');
+        $user->password = $data->input('password');
+
+        if($data->file('file') != null)
+        {
+            $user->picture = $data->file('file')->getClientOriginalName();
+            $data->file('file')->move('uploads/profiles/'.$user->picture);
+        }
+
+        if($user->save())
+        {
+            return redirect()->back()->with('success', 'User Updated successfully!!');
+        }
+    }
+
+    public function myOrders(){
+
+        if(session()->has('id'))
+        {
+        $orders = Order::where('customerId', session()->get('id'))->paginate(5);
+        $items = DB::table('products')
+        ->join('order_items','order_items.productId','products.id')
+        ->select('products.title','products.picture','order_items.*')
+        ->get(); 
+        return view('orders', compact('orders','items'));
+        }
+        return redirect()->route('login');
+    }
+
+    public function testMail(){
+        $details = [
+            'title' => 'Laravel Mail',
+            'message' => 'This is testing mail from laravel project developed by Adarsh',
+        ];
+
+        Mail::to('kaadarsh111@gmail.com')->send(new Testing($details));
+        return redirect()->route('home');
+    }
+
 }

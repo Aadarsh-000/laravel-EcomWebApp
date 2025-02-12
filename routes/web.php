@@ -30,3 +30,11 @@ Route::post('/checkout', [MainController::class, 'checkoutItem'])->name('checkou
 
 Route::post('/cart', [StripeController::class, 'stripePost'])->name('stripe.form');
 Route::post('/stripe', [StripeController::class, 'charge'])->name('stripe.charge');
+
+Route::get('/profile', [Maincontroller::class, 'profile'])->name('profile');
+
+Route::post('/profile', [MainController::class, 'updateUser'])->name('updateUser');
+
+Route::get('/myOrders', [MainController::class, 'myOrders'])->name('myOrders');
+
+Route::get('/testMail', [MainController::class, 'testMail'])->name('mail');
